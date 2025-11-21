@@ -1,4 +1,4 @@
- Farmlingo Backend (Node.js/TypeScript API)
+ ## Farmlingo Backend (Node.js/TypeScript API)
 
 A clean, modular, and scalable Node.js backend starter for the Farmlingo platform.
 This backend provides a solid foundation with routing, middleware, environment configuration, and a built-in `/health` status endpoint.
@@ -428,6 +428,7 @@ The following sequence diagram visualizes major flows across authentication, cou
 ![Sequence Diagram](./docs/sequence-diagram.png)
 
 If it does not render in your viewer, open the file directly at [Direct ERD Link](https://www.mermaidchart.com/d/3668fe9a-9bf9-4a26-85c9-d106d2e41cf4).
+
 
 
 
