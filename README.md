@@ -268,8 +268,6 @@ The ERD visualizes the relationships across users, courses, lessons, enrollments
 
 ![Database ERD](./docs/erd.svg)
 
-![Alternative Image](https://i.ibb.co/Mx2rvN2S)
-
 If the embedded images do not render, you can view the ERD directly using the link below:
 
 [**Direct ERD Link**](https://www.mermaidchart.com/d/19917d20-e7c7-413a-ba1a-070b1c446c34)
@@ -429,6 +427,7 @@ The following sequence diagram visualizes major flows across authentication, cou
 
 ![Sequence Diagram](./docs/sequence-diagram.svg)
 
-![Alternative Image](https://ibb.co/bgHgY24p)
+![Sequence Diagram](./docs/sequence-diagram.svg)
 
 If it does not render in your viewer, open the file directly at [Direct ERD Link](https://www.mermaidchart.com/d/3668fe9a-9bf9-4a26-85c9-d106d2e41cf4).
+
