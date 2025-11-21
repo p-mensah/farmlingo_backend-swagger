@@ -262,8 +262,6 @@ export default {
 
 ## 7.3. Database ERD
 
-## 7.3. Database ERD
-
 The ERD visualizes the relationships across users, courses, lessons, enrollments, forums, chat, quizzes, and related entities.
 
 ![Database ERD](./docs/erd.svg)
@@ -428,6 +426,11 @@ The following sequence diagram visualizes major flows across authentication, cou
 ![Sequence Diagram](./docs/sequence-diagram.png)
 
 If it does not render in your viewer, open the file directly at [Direct ERD Link](https://www.mermaidchart.com/d/3668fe9a-9bf9-4a26-85c9-d106d2e41cf4).
+
+## 15. Render Deployment
+
+You can access the Swagger UI for the Farmlingo backend here:  
+[Open Swagger UI](https://farmlingo-backend-swagger.onrender.com/api-docs/#/)
 
 
 
