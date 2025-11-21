@@ -427,7 +427,8 @@ The following sequence diagram visualizes major flows across authentication, cou
 
 ![Sequence Diagram](./docs/sequence-diagram.svg)
 
-![Sequence Diagram](./docs/sequence-diagram.svg)
+![Sequence Diagram](./docs/sequence-diagram.png)
 
 If it does not render in your viewer, open the file directly at [Direct ERD Link](https://www.mermaidchart.com/d/3668fe9a-9bf9-4a26-85c9-d106d2e41cf4).
+
 
