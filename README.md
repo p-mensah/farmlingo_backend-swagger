@@ -268,7 +268,7 @@ The ERD visualizes the relationships across users, courses, lessons, enrollments
 
 If the embedded images do not render, you can view the ERD directly using the link below:
 
-[**Direct ERD Link**](https://www.mermaidchart.com/d/19917d20-e7c7-413a-ba1a-070b1c446c34)
+[**Direct Sequence Diagram Link**](https://www.mermaidchart.com/d/19917d20-e7c7-413a-ba1a-070b1c446c34)
 
 
 
@@ -431,6 +431,7 @@ If it does not render in your viewer, open the file directly at [Direct ERD Link
 
 You can access the Swagger UI for the Farmlingo backend here:  
 [Open Swagger UI](https://farmlingo-backend-swagger.onrender.com/api-docs/#/)
+
 
 
 
