@@ -15,7 +15,14 @@ const app: Application = express();
 app.use(helmet());
 app.use(cors({ origin: true, credentials: true }));
 app.options('*', cors({ origin: true, credentials: true }));
-app.use(express.json());
+// Clerk Webhook needs raw body for verification, so we configure express.json accordingly
+app.use(
+  express.json({
+    verify: (req: Request, res: Response, buf: Buffer) => {
+      (req as any).rawBody = buf;
+    },
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 
 // Logging - use morgan for simple combined logging

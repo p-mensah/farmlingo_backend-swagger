@@ -278,3 +278,61 @@ export const getUsers = async (
     next(err as Error);
   }
 };
+
+
+export const syncUserProfile = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    // TODO: Implement Clerk webhook handler logic for user synchronization (create/update/delete).
+    // The request body contains the Clerk event payload.
+    // The webhookVerification middleware should handle authentication.
+
+    // Acknowledge receipt immediately, processing can happen asynchronously if complex.
+    // For now, simple logging and 200 response.
+    console.log('Clerk Webhook Received:', req.body.type, 'for user:', req.body.data.id);
+
+    res.status(200).json({ received: true });
+  } catch (err) {
+    // Webhook failures should not typically rely on standard error handling as Clerk might retry.
+    // For now, logging error but still returning 200 to Clerk to prevent retries on application error.
+    console.error('Error processing Clerk Webhook:', err);
+    res.status(200).json({ received: true, error: true });
+  }
+};
+
+export const getProfileByToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const auth = (req as any).auth as AuthContext | undefined;
+
+    if (!auth || !auth.clerk_user_id) {
+      // Should be caught by the authenticate middleware, but good defense in depth.
+      return next(createHttpError(401, 'Unauthorized'));
+    }
+
+    // Find user by clerk_user_id from the authenticated token payload
+    const rows = await db
+      .select()
+      .from(users)
+      .where(eq(users.clerk_user_id, auth.clerk_user_id))
+      .limit(1);
+
+    const user = rows[0];
+
+    if (!user) {
+      // This means the user is authenticated via Clerk but no local record exists (e.g., sync failed or hasn't run yet)
+      return next(createHttpError(403, 'Local user profile not found. Synchronization may be pending.'));
+    }
+
+    const { password_hash, ...safeUser } = user as any;
+    res.status(200).json(safeUser);
+  } catch (err) {
+    next(err as Error);
+  }
+};

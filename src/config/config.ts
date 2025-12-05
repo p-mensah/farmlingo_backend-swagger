@@ -10,3 +10,5 @@ export const healthMessage: string = process.env.HEALTH_OK_MESSAGE || 'ok';
 export const jwtSecret: string = process.env.JWT_SECRET_KEY || 'change-me';
 export const jwtExpiresIn: ms.StringValue | number =
   (process.env.JWT_EXPIRES_IN as ms.StringValue | undefined) || ('1h' as ms.StringValue);
+
+export const clerkWebhookSecret: string = process.env.CLERK_WEBHOOK_SECRET || 'no-secret-configured';

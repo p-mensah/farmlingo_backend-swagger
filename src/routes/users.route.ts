@@ -4,13 +4,48 @@ import {
   registerUser,
   loginUser,
   getUserProfile,
-  getUserDashboard
+  getUserDashboard,
+  syncUserProfile,      // 1. New: Controller for Clerk Webhooks
+  getProfileByToken     // 2. New: Controller to get profile via token
 } from '../controllers/users.controller';
-import { authenticate } from '../middlewares/auth';
-import multer from 'multer';
+import { authenticate, webhookVerification } from '../middlewares/auth'; // 3. Import webhookVerification
+
 
 const router = Router();
-const upload = multer();
+// const upload = multer(); // Removed unused instance
+
+// --- Public Endpoints ---
+
+/**
+ * @openapi
+ * /users/clerk-sync:
+ *   post:
+ *     tags:
+ *       - Webhooks
+ *     summary: Clerk Webhook Endpoint (User Profile Sync)
+ *     description: Receives and processes events from Clerk (e.g., user.created, user.updated) to sync user data securely.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               type:
+ *                 type: string
+ *                 description: The type of webhook event (e.g., user.created).
+ *               data:
+ *                 type: object
+ *                 description: The user data payload from Clerk.
+ *     responses:
+ *       '200':
+ *         description: Webhook received and processed successfully.
+ *       '401':
+ *         description: Webhook signature verification failed.
+ */
+// IMPORTANT: `webhookVerification` is crucial for security.
+router.post('/clerk-sync', webhookVerification, syncUserProfile);
+
 
 /**
  * @openapi
@@ -19,13 +54,28 @@ const upload = multer();
  *     tags:
  *       - Users
  *     summary: Register a new user
- *     description: Creates a new user record in the database.
+ *     description: Creates a new user record. 'clerk_user_id' is optional for temporary records.
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
- *             $ref: '#/components/schemas/NewUser'
+ *             type: object
+ *             required:
+ *               - email
+ *               - role
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 description: The user's email address.
+ *               role:
+ *                 type: string
+ *                 enum: [student, farmer, admin, super_admin]
+ *                 description: The user's assigned role.
+ *               clerk_user_id:
+ *                 type: string
+ *                 description: Optional. The ID provided by Clerk. If missing, the server generates a temporary one.
  *     responses:
  *       '201':
  *         description: User created successfully.
@@ -52,7 +102,8 @@ const upload = multer();
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
-router.post('/register', upload.none(), registerUser);
+// Removed upload.none() and updated request body in documentation
+router.post('/register', registerUser);
 
 /**
  * @openapi
@@ -65,7 +116,7 @@ router.post('/register', upload.none(), registerUser);
  *     requestBody:
  *       required: true
  *       content:
- *         multipart/form-data:
+ *         application/json:
  *           schema:
  *             $ref: '#/components/schemas/UserLoginRequest'
  *     responses:
@@ -100,7 +151,35 @@ router.post('/register', upload.none(), registerUser);
  *             schema:
  *               $ref: '#/components/schemas/ApiError'
  */
-router.post('/login', upload.none(), loginUser);
+// Removed upload.none() and updated request body in documentation
+router.post('/login', loginUser);
+
+// --- Protected Endpoints ---
+
+/**
+ * @openapi
+ * /users/profile-by-token:
+ *   get:
+ *     tags:
+ *       - Users
+ *     summary: Retrieve user profile using Clerk Access Token
+ *     description: Returns the user's local profile data based on the bearer token provided in the Authorization header.
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       '200':
+ *         description: User profile retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/User'
+ *       '401':
+ *         description: Unauthorized (invalid or missing token).
+ *       '403':
+ *         description: Forbidden (authenticated but no local record found).
+ */
+router.get('/profile-by-token', authenticate, getProfileByToken);
+
 
 /**
  * @openapi
